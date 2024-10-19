@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 3 Students</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #333; }
+        #topStudents { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        #topStudents th, #topStudents td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        #topStudents th { background-color: #f2f2f2; color: #333; }
+        #loadStudents { display: block; width: 200px; margin: 20px auto; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        #loadStudents:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Top 3 Students</h1>
+    <button id="loadStudents">Load Top Students</button>
+    <table id="topStudents">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            $('#loadStudents').click(function() {
+                $.ajax({
+                    url: '/get_top_student',
+                    method: 'GET',
+                    success: function(data) {
+                        var tableBody = $('#topStudents tbody');
+                        tableBody.empty();
+                        $.each(data, function(index, student) {
+                            var row = $('<tr>');
+                            row.append($('<td>').text(index + 1));
+                            row.append($('<td>').text(student.name));
+                            row.append($('<td>').text(student.score.toFixed(2)));
+                            tableBody.append(row);
+                        });
+                    },
+                    error: function() {
+                        alert('An error occurred while fetching the data.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
